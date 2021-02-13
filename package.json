@@ -2,7 +2,7 @@
   "name": "burger",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://nogy88.github.io/burgerdy",
+  "homepage": "https://nogy88.github.io/burger",
   "dependencies": {
     "axios": "^0.19.2",
     "cra-template": "1.0.3",
