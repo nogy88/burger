@@ -1,26 +1,24 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import Order from "../../components/Order";
 import Spinner from "../../components/General/Spinner";
 import * as actions from "../../redux/action/orderAction";
 
-class OrdersPage extends Component {
-  componentDidMount = () => {
-    this.props.loadOrders(this.props.userId);
-  };
+const OrdersPage = (props) => {
+  useEffect(() => {
+    props.loadOrders(props.userId);
+  }, []);
 
-  render() {
     return (
       <div>
-        {this.props.loading ? (
+        {props.loading ? (
           <Spinner />
         ) : (
-          this.props.orders.map((el) => <Order key={el[0]} order={el[1]} />)
+          props.orders.map((el) => <Order key={el[0]} order={el[1]} />)
         )}
       </div>
     );
   }
-}
 
 const mapStateToProps = (state) => {
   return {

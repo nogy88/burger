@@ -1,26 +1,36 @@
-import React, { Component } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import style from "./style.module.css";
 import Toolbar from "../../components/Toolbar";
-import BurgerPage from "../../page/BurgerPage";
 import SideBar from "../../components/SideBar";
-import OrdersPage from "../OrdersPage";
 import { Route, Switch } from "react-router-dom";
 import {Redirect} from "react-router-dom"
 import ShippingPage from "../ShippingPage";
 import LoginPage from "../LoginPage";
-import SignupPage from "../SignupPage";
 import Logout from "../../components/Logout";
 import { connect } from "react-redux";
 import * as actions from "../../redux/action/loginActions"
 import * as signupActions from "../../redux/action/signupActions"
 
+const BurgerPage = React.lazy(()=>{
+  return import("../../page/BurgerPage");
+})
 
-class App extends Component {
-  state = {
-    showSideBar: false,
+const SignupPage = React.lazy(()=>{
+  return import("../SignupPage");
+})
+
+const OrdersPage = React.lazy(()=>{
+  return import("../OrdersPage");
+})
+
+const App = props => {
+  const [showSideBar, setShowSideBar] = useState(false);
+
+  const toggleSideBar = () => {
+    setShowSideBar((prevShowSideBar) => !prevShowSideBar);
   };
 
-  componentDidMount = () => {
+  useEffect(()=>{
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
     const expiresDate = new Date(localStorage.getItem('expiresDate'));
@@ -29,35 +39,25 @@ class App extends Component {
     if(userId){
       if(expiresDate > new Date()){
         // hugatsaa n duusagui token bn, autologin hiine
-        this.props.autoLogin(token,userId);
+        props.autoLogin(token,userId);
         // token huchintei bolohod uldej bga hugatsag olj ter hugatsanii auto logout hiine
-        this.props.autoLogoutAfterMillisec(expiresDate.getTime() - new Date().getTime())
+        props.autoLogoutAfterMillisec(expiresDate.getTime() - new Date().getTime())
       } else {
           // token hugatsaa n duussan bn
-          this.props.logout();
+          props.logout();
       }
     }
-  }
+  }, []);
 
-  toggleSideBar = () => {
-    this.setState((prevState) => {
-      return { showSideBar: !prevState.showSideBar };
-    });
-  };
-
-  render() {
     return (
       <div>
-        <Toolbar toggleSideBar={this.toggleSideBar} />
-        <SideBar
-          showSideBar={this.state.showSideBar}
-          toggleSideBar={this.toggleSideBar}
-        />
+        <Toolbar toggleSideBar={toggleSideBar} />
+        
+        <SideBar showSideBar={showSideBar} toggleSideBar={toggleSideBar} />
+        
         <main className={style.Content}>
-          
-          {/* User ID: {this.props.userId} */}
-
-          {this.props.userId ? (
+          <Suspense fallback={<div>Түр хүлээнэ үү...</div>}>
+          {props.userId ? (
           <Switch>
             <Route path="/logout" component={Logout} />
             <Route path="/orders" component={OrdersPage} />
@@ -71,11 +71,11 @@ class App extends Component {
             <Redirect to="login"/>
           </Switch>
         )}
+          </Suspense>
         </main>
       </div>
     );
   }
-}
 
 const mapStateToProps = (state) => {
   return {

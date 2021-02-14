@@ -21,8 +21,6 @@ const BuildControls = (props) => {
         <BuildControl
           key={el}
           disabledIngredients={disabledIngredients}
-          ortsNemeh={props.ortsNemeh}
-          ortsHasah={props.ortsHasah}
           type={el}
           orts={props.ingredientNames[el]}
         />
@@ -48,11 +46,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    ortsNemeh: (ortsNer) => dispatch(actions.addIngredient(ortsNer)),
-    ortsHasah: (ortsNer) => dispatch(actions.removeIngredient(ortsNer)),
-  };
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(BuildControls);
+
+export default connect(mapStateToProps)(BuildControls);

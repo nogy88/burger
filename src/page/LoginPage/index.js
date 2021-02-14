@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import css from "./style.module.css";
 import Button from "../../components/General/Button";
 import { connect } from "react-redux";
@@ -6,52 +6,49 @@ import * as actions from "../../redux/action/loginActions";
 import Spinner from "../../components/General/Spinner";
 import { Redirect } from "react-router-dom";
 
-class Login extends Component {
-  state = {
-    email: "",
-    password: "",
+const Login = props => {
+  const [form, setForm] = useState({email: "", password: ""});
+  
+  const login = () => {
+    props.login(form.email, form.password);
   };
 
-  login = () => {
-    this.props.login(this.state.email, this.state.password);
+  const changeEmail = (e) => {
+    const newEmail = e.target.value;
+    setForm((formBefore) => ({email: newEmail, password: formBefore.password}));
   };
 
-  changeEmail = (e) => {
-    this.setState({ email: e.target.value });
+  const changePassword = (e) => {
+    const newPass = e.target.value;
+    setForm((formBefore) => ({email: formBefore.email, password: newPass}));
   };
 
-  changePassword = (e) => {
-    this.setState({ password: e.target.value });
-  };
-
-  render() {
-    return (
+  return (
       <div className={css.Login}>
-        {this.props.userId && <Redirect to="/"/>}
+        {props.userId && <Redirect to="/"/>}
         <input
           type="text"
-          onChange={this.changeEmail}
+          onChange={changeEmail}
           placeholder="Имэйл хаяг"
         />
         <input
           type="password"
-          onChange={this.changePassword}
+          onChange={changePassword}
           placeholder="Нууц үг"
         />
 
-        {this.props.loggingIn && <Spinner />}
+        {props.loggingIn && <Spinner />}
 
-        {this.props.firebaseError && (
-          <div style={{ color: "red" }}>{this.props.firebaseError}</div>
+        {props.firebaseError && (
+          <div style={{ color: "red" }}>{props.firebaseError}</div>
         )}
 
-        {this.props.userId && <Redirect to="/orders" />}
+        {props.userId && <Redirect to="/orders" />}
 
-        <Button text="ЛОГИН" btnType="Success" clicked={this.login} />
+        <Button text="ЛОГИН" btnType="Success" clicked={login} />
       </div>
     );
   }
-}
 
 const mapStateToProps = (state) => {
   return {

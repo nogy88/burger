@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 
 import Burger from "../../components/Burger";
@@ -7,30 +7,29 @@ import css from "./style.module.css";
 import { Route } from "react-router-dom";
 import ContactData from "../../components/ContactData";
 
-class ShippingPage extends Component {
+const ShippingPage = (props) => { 
 
-  goBack = () => {
-    this.props.history.goBack();
+  const goBack = (props) => {
+    props.history.goBack();
   };
 
-  goContactData = () => {
-    this.props.history.replace("/ship/contact");
+  const goContactData = () => {
+    props.history.replace("/ship/contact");
   };
 
-  render() {
     return (
       <div className={css.ShippingPage}>
         <h2>Таны захиалга амттай байх болно гэж найдаж байна...</h2>
-        <h2>Дүн: {this.props.totalPrice}₮</h2>
+        <h2>Дүн: {props.totalPrice}₮</h2>
         <Burger />
 
         <Button
-          clicked={this.goBack}
+          clicked={goBack}
           btnType="Danger"
           text="ЗАХИАЛГЫГ ЦУЦЛАХ"
         />
         <Button
-          clicked={this.goContactData}
+          clicked={goContactData}
           btnType="Success"
           text="ХҮРГЭЛТИЙН МЭДЭЭЛЭЛ ОРУУЛАХ"
         />
@@ -40,7 +39,7 @@ class ShippingPage extends Component {
       </div>
     );
   }
-}
+
 
 const mapStateToProps = (state) => {
   return {

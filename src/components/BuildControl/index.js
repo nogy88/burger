@@ -1,5 +1,7 @@
 import React from 'react';
 import css from './style.module.css'
+import { connect } from "react-redux";
+import * as actions from "../../redux/action/burgerActions";
 
 const BuildControl = (props) => (
     <div className={css.BuildControl}>
@@ -9,4 +11,11 @@ const BuildControl = (props) => (
     </div >
 )
 
-export default BuildControl;
+const mapDispatchToProps = (dispatch) => {
+    return {
+      ortsNemeh: (ortsNer) => dispatch(actions.addIngredient(ortsNer)),
+      ortsHasah: (ortsNer) => dispatch(actions.removeIngredient(ortsNer)),
+    };
+  };
+
+export default connect(null, mapDispatchToProps)(BuildControl);
